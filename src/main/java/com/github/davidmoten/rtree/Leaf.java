@@ -11,13 +11,13 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.Zone;
 import com.google.common.base.Optional;
 
 final class Leaf<T, S extends Geometry> implements Node<T, S> {
 
     private final List<Entry<T, S>> entries;
-    private final Rectangle mbr;
+    private final Zone mbr;
     private final Context context;
 
     Leaf(List<Entry<T, S>> entries, Context context) {

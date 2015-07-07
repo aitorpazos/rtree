@@ -12,14 +12,14 @@ import rx.Subscriber;
 
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
-import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.Zone;
 
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
 
     private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList();
 
-    private final List<Entry<Object, Rectangle>> some = entries1000();
+    private final List<Entry<Object, Zone>> some = entries1000();
 
     private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4)
             .<Object, Point> create().add(entries);
@@ -45,29 +45,29 @@ public class BenchmarksRTree {
     private final RTree<Object, Point> starTreeM128 = RTree.maxChildren(128).star()
             .<Object, Point> create().add(entries);
 
-    private final RTree<Object, Rectangle> smallDefaultTreeM4 = RTree.maxChildren(4)
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallDefaultTreeM4 = RTree.maxChildren(4)
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallDefaultTreeM10 = RTree.maxChildren(10)
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallDefaultTreeM10 = RTree.maxChildren(10)
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallStarTreeM4 = RTree.maxChildren(4).star()
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallStarTreeM4 = RTree.maxChildren(4).star()
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallStarTreeM10 = RTree.maxChildren(10).star()
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallStarTreeM10 = RTree.maxChildren(10).star()
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallDefaultTreeM32 = RTree.maxChildren(32)
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallDefaultTreeM32 = RTree.maxChildren(32)
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallStarTreeM32 = RTree.maxChildren(32).star()
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallStarTreeM32 = RTree.maxChildren(32).star()
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallDefaultTreeM128 = RTree.maxChildren(128)
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallDefaultTreeM128 = RTree.maxChildren(128)
+            .<Object, Zone> create().add(some);
 
-    private final RTree<Object, Rectangle> smallStarTreeM128 = RTree.maxChildren(128).star()
-            .<Object, Rectangle> create().add(some);
+    private final RTree<Object, Zone> smallStarTreeM128 = RTree.maxChildren(128).star()
+            .<Object, Zone> create().add(some);
 
     @Benchmark
     public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
@@ -243,19 +243,19 @@ public class BenchmarksRTree {
         tree.delete(entries.get(1000), true);
     }
 
-    private void search(RTree<Object, Rectangle> tree) {
+    private void search(RTree<Object, Zone> tree) {
         // returns 10 results
-        tree.search(Geometries.rectangle(500, 500, 630, 630)).subscribe();
+        tree.search(Geometries.zone(500, 500, 630, 630)).subscribe();
     }
 
     private void searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+        tree.search(Geometries.zone(40, 27.0, 40.5, 27.5)).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe(new Subscriber<Object>() {
+        tree.search(Geometries.zone(40, 27.0, 40.5, 27.5)).subscribe(new Subscriber<Object>() {
 
             @Override
             public void onStart() {
@@ -279,7 +279,7 @@ public class BenchmarksRTree {
         });
     }
 
-    private void insertRectangle(RTree<Object, Rectangle> tree) {
+    private void insertRectangle(RTree<Object, Zone> tree) {
         tree.add(new Object(), RTreeTest.random());
     }
 

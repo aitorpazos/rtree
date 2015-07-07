@@ -7,13 +7,13 @@ import com.google.common.base.Optional;
 public final class Circle implements Geometry {
 
     private final float x, y, radius;
-    private final Rectangle mbr;
+    private final Zone mbr;
 
     protected Circle(float x, float y, float radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.mbr = Rectangle.create(x - radius, y - radius, x + radius, y + radius);
+        this.mbr = Zone.create(x - radius, y - radius, x + radius, y + radius);
     }
 
     public static Circle create(double x, double y, double radius) {
@@ -29,17 +29,17 @@ public final class Circle implements Geometry {
     }
 
     @Override
-    public Rectangle mbr() {
+    public Zone mbr() {
         return mbr;
     }
 
     @Override
-    public double distance(Rectangle r) {
+    public double distance(Zone r) {
         return Math.max(0, new Point(x, y).distance(r) - radius);
     }
 
     @Override
-    public boolean intersects(Rectangle r) {
+    public boolean intersects(Zone r) {
         return distance(r) == 0;
     }
 

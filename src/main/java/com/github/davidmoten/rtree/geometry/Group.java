@@ -7,7 +7,7 @@ import com.github.davidmoten.rtree.Util;
 public class Group<T extends HasGeometry> implements HasGeometry {
 
     private final List<T> list;
-    private final Rectangle mbr;
+    private final Zone mbr;
 
     public Group(List<T> list) {
         this.list = list;

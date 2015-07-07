@@ -6,10 +6,10 @@ import com.google.common.base.Optional;
 
 public final class Point implements Geometry {
 
-    private final Rectangle mbr;
+    private final Zone mbr;
 
-    protected Point(float x, float y) {
-        this.mbr = Rectangle.create(x, y, x, y);
+    protected Point(float[] coord) {
+        this.mbr = Zone.create(coord, coord);
     }
 
     public static Point create(double x, double y) {
@@ -17,12 +17,12 @@ public final class Point implements Geometry {
     }
 
     @Override
-    public Rectangle mbr() {
+    public Zone mbr() {
         return mbr;
     }
 
     @Override
-    public double distance(Rectangle r) {
+    public double distance(Zone r) {
         return mbr.distance(r);
     }
 
@@ -37,7 +37,7 @@ public final class Point implements Geometry {
     }
 
     @Override
-    public boolean intersects(Rectangle r) {
+    public boolean intersects(Zone r) {
         return mbr.intersects(r);
     }
 

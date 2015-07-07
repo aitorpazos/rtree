@@ -6,7 +6,7 @@ import rx.functions.Func1;
 
 import com.github.davidmoten.rtree.geometry.HasGeometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.Zone;
 
 /**
  * Utility functions for making {@link Selector}s and {@link Splitter}s.
@@ -27,13 +27,13 @@ public final class Functions {
         }
     };
 
-    public static Func1<HasGeometry, Double> overlapArea(final Rectangle r,
+    public static Func1<HasGeometry, Double> overlapArea(final Zone r,
             final List<? extends HasGeometry> list) {
         return new Func1<HasGeometry, Double>() {
 
             @Override
             public Double call(HasGeometry g) {
-                Rectangle gPlusR = g.geometry().mbr().add(r);
+                Zone gPlusR = g.geometry().mbr().add(r);
                 double m = 0;
                 for (HasGeometry other : list) {
                     if (other != g) {
@@ -45,12 +45,12 @@ public final class Functions {
         };
     }
 
-    public static Func1<HasGeometry, Double> areaIncrease(final Rectangle r) {
+    public static Func1<HasGeometry, Double> areaIncrease(final Zone r) {
         return new Func1<HasGeometry, Double>() {
             @Override
             public Double call(HasGeometry g) {
-                Rectangle gPlusR = g.geometry().mbr().add(r);
-                return (double) (gPlusR.area() - g.geometry().mbr().area());
+                Zone gPlusR = g.geometry().mbr().add(r);
+                return (double) (gPlusR.content() - g.geometry().mbr().content());
             }
         };
     }

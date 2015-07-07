@@ -10,9 +10,9 @@ public interface Geometry {
 
     /**
      * <p>
-     * Returns the distance to the given {@link Rectangle}. For a
-     * {@link Rectangle} this might be Euclidean distance but for an EPSG4326
-     * lat-long Rectangle might be great-circle distance. The distance function
+     * Returns the distance to the given {@link Zone}. For a
+     * {@link Zone} this might be Euclidean distance but for an EPSG4326
+     * lat-long Zone might be great-circle distance. The distance function
      * should satisfy the following properties:
      * </p>
      * 
@@ -29,14 +29,14 @@ public interface Geometry {
      *            rectangle to measure distance to
      * @return distance to the rectangle r from the geometry
      */
-    double distance(Rectangle r);
+    double distance(Zone r);
 
     /**
      * Returns the minimum bounding rectangle of this geometry.
      * 
      * @return minimum bounding rectangle
      */
-    Rectangle mbr();
+    Zone mbr();
 
-    boolean intersects(Rectangle r);
+    boolean intersects(Zone r);
 }

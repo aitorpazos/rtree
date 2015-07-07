@@ -12,21 +12,21 @@ public final class Geometries {
         return Point.create(x, y);
     }
 
-    public static Rectangle rectangle(double x1, double y1, double x2, double y2) {
-        return Rectangle.create(x1, y1, x2, y2);
+    public static Zone zone(double x1, double y1, double x2, double y2) {
+        return Zone.create(x1, y1, x2, y2);
     }
 
     public static Circle circle(double x, double y, double radius) {
         return Circle.create(x, y, radius);
     }
 
-    public static Rectangle rectangleGeographic(double lon1, double lat1, double lon2, double lat2) {
+    public static Zone rectangleGeographic(double lon1, double lat1, double lon2, double lat2) {
         double x1 = normalizeLongitude(lon1);
         double x2 = normalizeLongitude(lon2);
         if (x2 < x1) {
             x2 += 360;
         }
-        return rectangle(x1, lat1, x2, lat2);
+        return zone(x1, lat1, x2, lat2);
     }
 
     public static Point pointGeographic(double lon, double lat) {

@@ -33,7 +33,7 @@ public final class ListPair<T extends HasGeometry> {
 
     public float areaSum() {
         if (areaSum == null)
-            areaSum = group1.geometry().mbr().area() + group2.geometry().mbr().area();
+            areaSum = group1.geometry().mbr().content() + group2.geometry().mbr().content();
         return areaSum;
     }
 

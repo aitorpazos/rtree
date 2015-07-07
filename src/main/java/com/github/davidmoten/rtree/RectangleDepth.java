@@ -1,19 +1,19 @@
 package com.github.davidmoten.rtree;
 
-import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.Zone;
 
 final class RectangleDepth {
-    private final Rectangle rectangle;
+    private final Zone zone;
     private final int depth;
 
-    RectangleDepth(Rectangle rectangle, int depth) {
+    RectangleDepth(Zone zone, int depth) {
         super();
-        this.rectangle = rectangle;
+        this.zone = zone;
         this.depth = depth;
     }
 
-    Rectangle getRectangle() {
-        return rectangle;
+    Zone getRectangle() {
+        return zone;
     }
 
     int getDepth() {

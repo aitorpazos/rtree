@@ -8,10 +8,10 @@ public class Intersects {
         // prevent instantiation
     }
 
-	public static final Func2<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, Circle, Boolean>() {
+	public static final Func2<Zone, Circle, Boolean> rectangleIntersectsCircle = new Func2<Zone, Circle, Boolean>() {
 		@Override
-		public Boolean call(Rectangle rectangle, Circle circle) {
-			return circle.intersects(rectangle);
+		public Boolean call(Zone zone, Circle circle) {
+			return circle.intersects(zone);
 		}
 	};
 

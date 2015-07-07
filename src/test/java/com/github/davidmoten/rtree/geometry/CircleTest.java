@@ -21,14 +21,14 @@ public class CircleTest {
     @Test
     public void testDistance() {
         Circle circle = circle(0, 0, 1);
-        Rectangle r = Geometries.rectangle(1, 1, 2, 2);
+        Zone r = Geometries.zone(1, 1, 2, 2);
         assertEquals(Math.sqrt(2) - 1, circle.distance(r), PRECISION);
     }
 
     @Test
     public void testMbr() {
         Circle circle = circle(1, 2, 3);
-        Rectangle r = Geometries.rectangle(-2, -1, 4, 5);
+        Zone r = Geometries.zone(-2, -1, 4, 5);
         assertEquals(r, circle.mbr());
     }
 
@@ -75,29 +75,29 @@ public class CircleTest {
     @Test
     public void testDistanceIsZeroWhenIntersects() {
         Circle circle = circle(0, 0, 1);
-        assertTrue(circle.distance(Geometries.rectangle(0, 1, 0, 1)) == 0);
+        assertTrue(circle.distance(Geometries.zone(0, 1, 0, 1)) == 0);
     }
 
     @Test
     public void testIntersects2() {
         Circle circle = circle(0, 0, 1);
-        assertTrue(circle.distance(Geometries.rectangle(0, 1.1, 0, 1.1)) != 0);
+        assertTrue(circle.distance(Geometries.zone(0, 1.1, 0, 1.1)) != 0);
     }
 
     @Test
     public void testIntersects3() {
         Circle circle = circle(0, 0, 1);
-        assertTrue(circle.distance(Geometries.rectangle(1, 1, 1, 1)) != 0);
+        assertTrue(circle.distance(Geometries.zone(1, 1, 1, 1)) != 0);
     }
 
     @Test
     public void testIntersectsReturnsTrue() {
-        assertTrue(circle(0, 0, 1).intersects(Geometries.rectangle(0, 0, 1, 1)));
+        assertTrue(circle(0, 0, 1).intersects(Geometries.zone(0, 0, 1, 1)));
     }
 
     @Test
     public void testIntersectsReturnsFalse() {
-        assertFalse(circle(0, 0, 1).intersects(Geometries.rectangle(10, 10, 11, 11)));
+        assertFalse(circle(0, 0, 1).intersects(Geometries.zone(10, 10, 11, 11)));
     }
     
     @Test

@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
+import static com.github.davidmoten.rtree.geometry.Geometries.zone;
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
 
@@ -12,7 +12,7 @@ import rx.functions.Func2;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Point;
-import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.geometry.Zone;
 import com.github.davidmoten.rx.operators.OperatorBoundedPriorityQueue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -528,7 +528,7 @@ public final class RTree<T, S extends Geometry> {
      *            the rectangle to check intersection with
      * @return whether the geometry and the rectangle intersect
      */
-    public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
+    public static Func1<Geometry, Boolean> intersects(final Zone r) {
         return new Func1<Geometry, Boolean>() {
             @Override
             public Boolean call(Geometry g) {
@@ -557,7 +557,7 @@ public final class RTree<T, S extends Geometry> {
      *            rectangle to check intersection with the entry mbr
      * @return entries that intersect with the rectangle r
      */
-    public Observable<Entry<T, S>> search(final Rectangle r) {
+    public Observable<Entry<T, S>> search(final Zone r) {
         return search(intersects(r));
     }
 
@@ -584,7 +584,7 @@ public final class RTree<T, S extends Geometry> {
      *            entries returned must be within this distance from rectangle r
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T, S>> search(final Rectangle r, final double maxDistance) {
+    public Observable<Entry<T, S>> search(final Zone r, final double maxDistance) {
         return search(new Func1<Geometry, Boolean>() {
             @Override
             public Boolean call(Geometry g) {
@@ -678,7 +678,7 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
+    public Observable<Entry<T, S>> nearest(final Zone r, final double maxDistance, int maxCount) {
         return search(r, maxDistance).lift(
                 new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount, Comparators
                         .<T, S> ascendingDistance(r)));
@@ -723,7 +723,7 @@ public final class RTree<T, S extends Geometry> {
      * @return visualizer
      */
     @SuppressWarnings("unchecked")
-    public Visualizer visualize(int width, int height, Rectangle view) {
+    public Visualizer visualize(int width, int height, Zone view) {
         return new Visualizer((RTree<?, Geometry>) this, width, height, view);
     }
 
@@ -743,20 +743,20 @@ public final class RTree<T, S extends Geometry> {
         return visualize(width, height, calculateMaxView(this));
     }
 
-    private Rectangle calculateMaxView(RTree<T, S> tree) {
+    private Zone calculateMaxView(RTree<T, S> tree) {
         return tree
                 .entries()
-                .reduce(Optional.<Rectangle> absent(),
-                        new Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
+                .reduce(Optional.<Zone> absent(),
+                        new Func2<Optional<Zone>, Entry<T, S>, Optional<Zone>>() {
 
                             @Override
-                            public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T, S> entry) {
+                            public Optional<Zone> call(Optional<Zone> r, Entry<T, S> entry) {
                                 if (r.isPresent())
                                     return of(r.get().add(entry.geometry().mbr()));
                                 else
                                     return of(entry.geometry().mbr());
                             }
-                        }).toBlocking().single().or(rectangle(0, 0, 0, 0));
+                        }).toBlocking().single().or(zone(0, 0, 0, 0));
     }
 
     Optional<? extends Node<T, S>> root() {
@@ -795,12 +795,12 @@ public final class RTree<T, S extends Geometry> {
      * Returns a human readable form of the RTree. Here's an example:
      * 
      * <pre>
-     * mbr=Rectangle [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
-     *   mbr=Rectangle [x1=28.0, y1=4.0, x2=34.0, y2=85.0]
+     * mbr=Zone [x1=10.0, y1=4.0, x2=62.0, y2=85.0]
+     *   mbr=Zone [x1=28.0, y1=4.0, x2=34.0, y2=85.0]
      *     entry=Entry [value=2, geometry=Point [x=29.0, y=4.0]]
      *     entry=Entry [value=1, geometry=Point [x=28.0, y=19.0]]
      *     entry=Entry [value=4, geometry=Point [x=34.0, y=85.0]]
-     *   mbr=Rectangle [x1=10.0, y1=45.0, x2=62.0, y2=63.0]
+     *   mbr=Zone [x1=10.0, y1=45.0, x2=62.0, y2=63.0]
      *     entry=Entry [value=5, geometry=Point [x=62.0, y=45.0]]
      *     entry=Entry [value=3, geometry=Point [x=10.0, y=63.0]]
      * </pre>
