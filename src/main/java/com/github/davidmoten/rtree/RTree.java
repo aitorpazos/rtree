@@ -19,7 +19,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 /**
- * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
+ * Immutable in-memory N-D R-Tree with configurable splitter heuristic.
  * 
  * @param <T>
  *            the entry value type
@@ -44,10 +44,15 @@ public final class RTree<T, S extends Geometry> {
     public static final int MAX_CHILDREN_DEFAULT_STAR = 4;
 
     /**
+     * By default, R-tree nodes are two dimentsions
+     */
+    public static final int DEFAULT_RTREE_NODES_DIMENSIONS = 2;
+    
+    /**
      * Current size in Entries of the RTree.
      */
     private int size;
-
+    
     /**
      * Constructor.
      * 
@@ -195,6 +200,7 @@ public final class RTree<T, S extends Geometry> {
         private static final double DEFAULT_FILLING_FACTOR = 0.4;
         private Optional<Integer> maxChildren = absent();
         private Optional<Integer> minChildren = absent();
+        private Optional<Integer> dimensions = absent();
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
         private boolean star = false;
@@ -230,6 +236,18 @@ public final class RTree<T, S extends Geometry> {
         }
 
         /**
+         * Sets the number of dimensions of the R-tree nodes
+         * 
+         * @param dimensions
+         *          number of dimentsions of R-tree nodes
+         * @return builder
+         */
+        public Builder dimensions(int dimensions){
+            this.dimensions = of(dimensions);
+            return this;
+        }
+        
+        /**
          * Sets the {@link Splitter} to use when maxChildren is reached.
          * 
          * @param splitter
@@ -253,7 +271,7 @@ public final class RTree<T, S extends Geometry> {
             this.selector = selector;
             return this;
         }
-
+        
         /**
          * Sets the splitter to {@link SplitterRStar} and selector to
          * {@link SelectorRStar} and defaults to minChildren=10.
@@ -284,7 +302,10 @@ public final class RTree<T, S extends Geometry> {
                     maxChildren = of(MAX_CHILDREN_DEFAULT_GUTTMAN);
             if (!minChildren.isPresent())
                 minChildren = of((int) Math.round(maxChildren.get() * DEFAULT_FILLING_FACTOR));
-            return new RTree<T, S>(new Context(minChildren.get(), maxChildren.get(), selector,
+            if (!dimensions.isPresent()){
+                dimensions = of(DEFAULT_RTREE_NODES_DIMENSIONS);
+            }
+            return new RTree<T, S>(new Context(minChildren.get(), maxChildren.get(), dimensions.get(), selector,
                     splitter));
         }
 
@@ -756,7 +777,7 @@ public final class RTree<T, S extends Geometry> {
                                 else
                                     return of(entry.geometry().mbr());
                             }
-                        }).toBlocking().single().or(zone(0, 0, 0, 0));
+                        }).toBlocking().single().or(zone(new double[tree.context().dim()], new double[tree.context().dim()]));
     }
 
     Optional<? extends Node<T, S>> root() {

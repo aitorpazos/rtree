@@ -8,16 +8,16 @@ public final class Geometries {
         // prevent instantiation
     }
 
-    public static Point point(double x, double y) {
-        return Point.create(x, y);
+    public static Point point(double[] coord) {
+        return Point.create(coord);
     }
 
-    public static Zone zone(double x1, double y1, double x2, double y2) {
-        return Zone.create(x1, y1, x2, y2);
+    public static Zone zone(double[] coord1, double[] coord2) {
+        return Zone.create(coord1, coord2);
     }
 
-    public static Circle circle(double x, double y, double radius) {
-        return Circle.create(x, y, radius);
+    public static Circle circle(double[] coord, double radius) {
+        return Circle.create(coord, radius);
     }
 
     public static Zone rectangleGeographic(double lon1, double lat1, double lon2, double lat2) {
@@ -26,11 +26,14 @@ public final class Geometries {
         if (x2 < x1) {
             x2 += 360;
         }
-        return zone(x1, lat1, x2, lat2);
+        double[] coord1 = {x1, lat1};
+        double[] coord2 = {x2, lat2};
+        return zone(coord1, coord2);
     }
 
     public static Point pointGeographic(double lon, double lat) {
-        return point(normalizeLongitude(lon), lat);
+        double[] coord = {normalizeLongitude(lon), lat};
+        return point(coord);
     }
 
     @VisibleForTesting

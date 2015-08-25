@@ -11,6 +11,7 @@ public final class Context {
     private final int minChildren;
     private final Splitter splitter;
     private final Selector selector;
+    private final int dim;
 
     /**
      * Constructor.
@@ -24,7 +25,7 @@ public final class Context {
      * @param splitter
      *            algorithm to split the children across two new nodes
      */
-    public Context(int minChildren, int maxChildren, Selector selector, Splitter splitter) {
+    public Context(int minChildren, int maxChildren, int dim, Selector selector, Splitter splitter) {
         Preconditions.checkNotNull(splitter);
         Preconditions.checkNotNull(selector);
         Preconditions.checkArgument(maxChildren > 2);
@@ -34,6 +35,7 @@ public final class Context {
         this.maxChildren = maxChildren;
         this.minChildren = minChildren;
         this.splitter = splitter;
+        this.dim = dim;
     }
 
     public int maxChildren() {
@@ -50,6 +52,10 @@ public final class Context {
 
     public Selector selector() {
         return selector;
+    }
+    
+    public int dim() {
+        return dim;
     }
 
 }

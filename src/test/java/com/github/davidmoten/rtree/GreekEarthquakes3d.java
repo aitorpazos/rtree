@@ -15,15 +15,15 @@ import rx.observables.StringObservable;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 
-public class GreekEarthquakes {
+public class GreekEarthquakes3d {
 
     static Observable<Entry<Object, Point>> entries() {
         Observable<String> source = Observable.using(new Func0<InputStream>() {
             @Override
             public InputStream call() {
                 try {
-                    return new GZIPInputStream(GreekEarthquakes.class
-                            .getResourceAsStream("/greek-earthquakes-1964-2000.txt.gz"));
+                    return new GZIPInputStream(GreekEarthquakes3d.class
+                            .getResourceAsStream("/greek-earthquakes-3d.txt.gz"));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -52,8 +52,9 @@ public class GreekEarthquakes {
                             String[] items = line.split(" ");
                             double lat = Double.parseDouble(items[0]);
                             double lon = Double.parseDouble(items[1]);
+                            double alt = Double.parseDouble(items[2]);
                             return Observable.just(Entry.entry(new Object(),
-                                    Geometries.point(new double[]{lat, lon})));
+                                    Geometries.point(new double[]{lat, lon, alt})));
                         } else
                             return Observable.empty();
                     }

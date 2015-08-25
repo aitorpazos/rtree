@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -90,20 +91,61 @@ public final class Visualizer {
     }
 
     private void drawNode(Graphics2D g, List<RectangleDepth> nodes) {
+        int gridDim = tree.context().dim();
+        if (gridDim < 3){
+            gridDim = 1;
+        }
+        g.setColor(Color.BLACK);
+        // Creating multidimensional grid. Using scatter plot matrix representation
+        int col = 0;
+        int row = 0;
+        for(int i = 0; i < gridDim*gridDim; i++) {
+            g.drawRect((col * width/gridDim), (row * height/gridDim), width/gridDim, height/gridDim);
+            col++;
+            if( col == gridDim ) {
+                col = 0;
+                row++;
+            }
+        }
+        
+        Font font = new Font("Tahoma", Font.BOLD, 25);
+        g.setFont(font);
+        for (int axis1=0; axis1<gridDim; axis1++){
+            for (int axis2=0; axis2<gridDim; axis2++){
+                if (gridDim>2 && axis1==axis2){
+                    g.drawString("Axis " + axis1
+                                    , axis1 * width/gridDim + (width/gridDim)/2
+                                    , axis2 * height/gridDim + (height/gridDim)/2);
+                }
+            }
+        }
         for (final RectangleDepth node : nodes) {
             final Color color = Color.getHSBColor(node.getDepth() / (maxDepth + 1f), 1f, 1f);
             g.setStroke(new BasicStroke(Math.max(0.5f, maxDepth - node.getDepth() + 1 - 1)));
             g.setColor(color);
             final Zone r = node.getRectangle();
-            drawRectangle(g, r);
+            for (int axis1=0; axis1<gridDim; axis1++){
+                int axis2 = 0;
+                while( axis2 <= axis1){
+                    if (gridDim<=2 || axis1!=axis2){
+                        drawRectangle(g, r, gridDim, axis1, axis2);
+                    }
+                    axis2++;
+                }
+            }
         }
     }
 
-    private void drawRectangle(Graphics2D g, Zone r) {
-        final double x1 = (r.x1() - view.x1()) / (view.x2() - view.x1()) * width;
-        final double y1 = (r.y1() - view.y1()) / (view.y2() - view.y1()) * height;
-        final double x2 = (r.x2() - view.x1()) / (view.x2() - view.x1()) * width;
-        final double y2 = (r.y2() - view.y1()) / (view.y2() - view.y1()) * height;
+    private void drawRectangle(Graphics2D g, Zone r, int gridDim, int axis1, int axis2) {
+        assert(r.dim()>axis1 && r.dim()>axis2);
+        final double x1 = (axis1 + (r.coord1(axis1) - view.coord1(axis1)) / 
+                            (view.coord2(axis1) - view.coord1(axis1))) * (width/gridDim);
+        final double y1 = (axis2 + (r.coord1(axis2) - view.coord1(axis2)) / 
+                            (view.coord2(axis2) - view.coord1(axis2))) * (height/gridDim);
+        final double x2 = (axis1 + (r.coord2(axis1) - view.coord1(axis1)) /
+                            (view.coord2(axis1) - view.coord1(axis1))) * (width/gridDim);
+        final double y2 = (axis2 + (r.coord2(axis2) - view.coord1(axis2)) /
+                            (view.coord2(axis2) - view.coord1(axis2))) * (height/gridDim);
         g.drawRect(rnd(x1), rnd(y1), rnd(x2 - x1), rnd(y2 - y1));
     }
 

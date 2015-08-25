@@ -68,23 +68,23 @@ public class GeometriesTest {
     @Test
     public void testRectangleLatLong() {
         Zone r = Geometries.rectangleGeographic(10, -10, 5, 10);
-        assertEquals(10, r.x1(), PRECISION);
-        assertEquals(365, r.x2(), PRECISION);
-        assertEquals(-10, r.y1(), PRECISION);
-        assertEquals(10, r.y2(), PRECISION);
+        assertEquals(10, r.coord1(0), PRECISION);
+        assertEquals(365, r.coord2(0), PRECISION);
+        assertEquals(-10, r.coord1(1), PRECISION);
+        assertEquals(10, r.coord2(1), PRECISION);
     }
 
     @Test
     public void testRectangleLatLong2() {
         Zone r = Geometries.rectangleGeographic(5, -10, 10, 10);
-        assertEquals(5, r.x1(), PRECISION);
-        assertEquals(10, r.x2(), PRECISION);
+        assertEquals(5, r.coord1(0), PRECISION);
+        assertEquals(10, r.coord2(0), PRECISION);
     }
 
     @Test
     public void testPointLatLong() {
         Point point = Geometries.pointGeographic(181, 25);
-        assertEquals(-179, point.x(), PRECISION);
-        assertEquals(25, point.y(), PRECISION);
+        assertEquals(-179, point.coord(0), PRECISION);
+        assertEquals(25, point.coord(1), PRECISION);
     }
 }

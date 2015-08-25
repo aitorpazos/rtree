@@ -245,17 +245,17 @@ public class BenchmarksRTree {
 
     private void search(RTree<Object, Zone> tree) {
         // returns 10 results
-        tree.search(Geometries.zone(500, 500, 630, 630)).subscribe();
+        tree.search(Geometries.zone(new double[]{500, 500}, new double[]{630, 630})).subscribe();
     }
 
     private void searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.zone(40, 27.0, 40.5, 27.5)).subscribe();
+        tree.search(Geometries.zone(new double[]{40, 27.0}, new double[]{40.5, 27.5})).subscribe();
     }
 
     private void searchGreekWithBackpressure(RTree<Object, Point> tree) {
         // should return 22 results
-        tree.search(Geometries.zone(40, 27.0, 40.5, 27.5)).subscribe(new Subscriber<Object>() {
+        tree.search(Geometries.zone(new double[]{40, 27.0}, new double[]{40.5, 27.5})).subscribe(new Subscriber<Object>() {
 
             @Override
             public void onStart() {
@@ -284,7 +284,7 @@ public class BenchmarksRTree {
     }
 
     private void insertPoint(RTree<Object, Point> tree) {
-        tree.add(new Object(), Geometries.point(Math.random() * 1000, Math.random() * 1000));
+        tree.add(new Object(), Geometries.point(new double[]{Math.random() * 1000, Math.random() * 1000}));
     }
 
     public static void main(String[] args) {

@@ -124,7 +124,7 @@ public class QuadraticSplitterTest {
     }
     
     private static Mbr r(int n) {
-        return new Mbr(Zone.create(n, n, n + 1, n + 1));
+        return new Mbr(Zone.create(new double[]{n, n}, new double[]{n + 1, n + 1}));
     }
 
 }

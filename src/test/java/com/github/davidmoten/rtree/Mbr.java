@@ -16,5 +16,9 @@ public class Mbr implements HasGeometry {
     public Geometry geometry() {
         return r;
     }
-
+    
+    @Override
+    public String toString(){
+        return null != r ? r.toString() : "null";
+    }
 }

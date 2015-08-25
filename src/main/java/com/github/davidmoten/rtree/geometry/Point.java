@@ -12,8 +12,12 @@ public final class Point implements Geometry {
         this.mbr = Zone.create(coord, coord);
     }
 
-    public static Point create(double x, double y) {
-        return new Point((float) x, (float) y);
+    public static Point create(double[] coord) {
+        float[] newArray = new float[coord.length];
+        for (int i=0; i<coord.length; i++){
+            newArray[i] = (float) coord[i];
+        }
+        return new Point(newArray);
     }
 
     @Override
@@ -31,9 +35,18 @@ public final class Point implements Geometry {
     }
 
     public double distanceSquared(Point p) {
-        float dx = mbr().x1() - p.mbr().x1();
-        float dy = mbr().y1() - p.mbr().y1();
-        return dx * dx + dy * dy;
+        float diff;
+        double radicand = 0;
+        for (int d = 0; d < mbr.dim(); d++) {
+            if (this.coord(d) > p.coord(d)) {
+                diff = this.coord(d) - p.coord(d);
+            } else {
+                diff = p.coord(d) - this.coord(d);
+            }
+            radicand += diff * diff;
+        }
+        
+        return radicand;
     }
 
     @Override
@@ -41,12 +54,8 @@ public final class Point implements Geometry {
         return mbr.intersects(r);
     }
 
-    public float x() {
-        return mbr.x1();
-    }
-
-    public float y() {
-        return mbr.y1();
+    public float coord(int i) {
+        return mbr.coord1(i);
     }
 
     @Override
@@ -65,7 +74,7 @@ public final class Point implements Geometry {
 
     @Override
     public String toString() {
-        return "Point [x=" + x() + ", y=" + y() + "]";
+        return "Point coords: " + mbr.toString();
     }
 
 }

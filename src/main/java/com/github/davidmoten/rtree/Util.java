@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,22 +42,31 @@ public final class Util {
      */
     public static Zone mbr(Collection<? extends HasGeometry> items) {
         Preconditions.checkArgument(!items.isEmpty());
-        float minX1 = Float.MAX_VALUE;
-        float minY1 = Float.MAX_VALUE;
-        float maxX2 = Float.MIN_VALUE;
-        float maxY2 = Float.MIN_VALUE;
+        
+        float[] mins = null;
+        float[] maxs = null;
+        
         for (final HasGeometry item : items) {
             Zone r = item.geometry().mbr();
-            if (r.x1() < minX1)
-                minX1 = r.x1();
-            if (r.y1() < minY1)
-                minY1 = r.y1();
-            if (r.x2() > maxX2)
-                maxX2 = r.x2();
-            if (r.y2() > maxY2)
-                maxY2 = r.y2();
+            if (null == mins){
+                mins = new float[r.dim()];
+                Arrays.fill(mins, Float.MAX_VALUE);
+            }
+            if (null == maxs){
+                maxs = new float[r.dim()];
+                Arrays.fill(maxs, Float.MIN_VALUE);
+            }
+            
+            for (int i=0; i<mins.length; i++){
+                if (r.coord1(i) < mins[i]){
+                    mins[i] = r.coord1(i);
+                }
+                if (r.coord2(i) > maxs[i]){
+                    maxs[i] = r.coord2(i);
+                }
+            }
         }
-        return Zone.create(minX1, minY1, maxX2, maxY2);
+        return Zone.create(mins, maxs);
     }
 
     static <T> List<T> add(List<T> list, T element) {

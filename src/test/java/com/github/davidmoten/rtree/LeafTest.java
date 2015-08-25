@@ -12,7 +12,7 @@ import com.github.davidmoten.rtree.geometry.Zone;
 
 public class LeafTest {
 
-    private static Context context = new Context(2, 4, new SelectorMinimalAreaIncrease(),
+    private static Context context = new Context(2, 4, 2, new SelectorMinimalAreaIncrease(),
             new SplitterQuadratic());
 
     @Test(expected = IllegalArgumentException.class)
@@ -22,8 +22,8 @@ public class LeafTest {
 
     @Test
     public void testMbr() {
-        Zone r1 = Geometries.zone(0, 1, 3, 5);
-        Zone r2 = Geometries.zone(1, 2, 4, 6);
+        Zone r1 = Geometries.zone(new double[]{0, 1}, new double[]{3, 5});
+        Zone r2 = Geometries.zone(new double[]{1, 2}, new double[]{4, 6});
         @SuppressWarnings("unchecked")
         Zone r = new Leaf<Object, Zone>(Arrays.asList(Entry.entry(new Object(), r1),
                 Entry.entry(new Object(), r2)), context).geometry().mbr();
